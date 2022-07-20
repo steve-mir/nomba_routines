@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:nomba_routines/Onboarding.dart';
+import 'package:nomba_routines/screens/onboarding.dart';
 
 void main() {
   runApp(const MyApp());
