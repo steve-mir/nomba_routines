@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nomba_routines/database_helper.dart';
 import 'package:nomba_routines/screens/routinePage.dart';
 import 'package:nomba_routines/widgets/TaskCardWidget.dart';
 
@@ -27,6 +28,8 @@ class homePage extends StatefulWidget {
 class _homePageState extends State<homePage> {
   String filterType = 'today';
   int currenTab = 0;
+
+  DatabaseHelper _dbHelper = DatabaseHelper();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +61,20 @@ class _homePageState extends State<homePage> {
                         }),
                   ),
                   Expanded(
-                      child: ListView(
+                      child: /*FutureBuilder(
+                    initialData: [],
+                    future: _dbHelper.getRoutines(),
+                    builder: (context, snapshot) {
+                      return ListView.builder(
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            return TaskCardWidget(
+                                title: snapshot.data[index].title,
+                                desc: snapshot.data[index].desc);
+                          });
+                    },
+                  )*/
+                      ListView(
                     children: [
                       TaskCardWidget(
                         title: "Get Started",
@@ -70,7 +86,8 @@ class _homePageState extends State<homePage> {
                         desc: "helping you",
                       ),
                     ],
-                  ))
+                  )
+                      )
                 ],
               ),
               Positioned(
@@ -82,13 +99,18 @@ class _homePageState extends State<homePage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RoutinePage(),
-                        ));
+                        )).then((value) {
+                      setState(() {});
+                    });
                   },
                   child: Container(
                     width: 60.0,
                     height: 60.0,
                     decoration: BoxDecoration(
-                        color: Color(0xFF7349FE),
+                        gradient: LinearGradient(
+                            colors: [Color(0xFF7349FE), Color(0xFF643FDB)],
+                            begin: Alignment(0.0, -1.0),
+                            end: Alignment(0.0, 1.0)),
                         borderRadius: BorderRadius.circular(20.0)),
                     child: Icon(Icons.add),
                   ),
