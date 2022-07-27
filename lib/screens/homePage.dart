@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nomba_routines/database_helper.dart';
+import 'package:nomba_routines/models/routine.dart';
 import 'package:nomba_routines/screens/routinePage.dart';
 import 'package:nomba_routines/widgets/TaskCardWidget.dart';
 
@@ -29,7 +30,7 @@ class _homePageState extends State<homePage> {
   String filterType = 'today';
   int currenTab = 0;
 
-  DatabaseHelper _dbHelper = DatabaseHelper();
+  //DatabaseHelper _dbHelper = DatabaseHelper();
 
   @override
   Widget build(BuildContext context) {
@@ -61,33 +62,30 @@ class _homePageState extends State<homePage> {
                         }),
                   ),
                   Expanded(
-                      child: /*FutureBuilder(
-                    initialData: [],
-                    future: _dbHelper.getRoutines(),
-                    builder: (context, snapshot) {
-                      return ListView.builder(
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) {
-                            return TaskCardWidget(
-                                title: snapshot.data[index].title,
-                                desc: snapshot.data[index].desc);
-                          });
-                    },
-                  )*/
-                      ListView(
-                    children: [
-                      TaskCardWidget(
-                        title: "Get Started",
-                        desc:
-                            "Hello there! Welcome to Nomba routines, this is a default routine that you can edit or delete to start using the app",
-                      ),
-                      TaskCardWidget(
-                        title: "Help",
-                        desc: "helping you",
-                      ),
-                    ],
+                    child: FutureBuilder<List<Routine>>(
+                      future: DatabaseHelper.instance.getRoutines(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Routine>> snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: Text("Loading..."),
+                          );
+                        }
+                        return snapshot.data!.isEmpty
+                            ? Center(
+                                child: Text("No Routines yet"),
+                              )
+                            : ListView(
+                                children: snapshot.data!.map((e) {
+                                  return TaskCardWidget(
+                                    title: e.title,
+                                    desc: e.desc,
+                                  );
+                                }).toList(),
+                              );
+                      },
+                    ),
                   )
-                      )
                 ],
               ),
               Positioned(

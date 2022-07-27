@@ -33,7 +33,16 @@ class RoutinePageState extends State<RoutinePage> {
                     Expanded(
                         child: TextField(
                       onSubmitted: ((value) async {
-                        print(value);
+                        Routine routine = Routine(1, value,
+                            "This is the description", "Tag", 2, "nextTime");
+                        await DatabaseHelper.instance.insertRoutine(routine);
+                        print("Routine created");
+                        setState(() {});
+
+                        /*routine.addListener(() {
+                          print('chanhed the title to' + routine.title);
+                        });*/
+
                         /*if (value != "") {
                           DatabaseHelper _dbHelper = DatabaseHelper();
                           Routine _newRoutine =
@@ -42,6 +51,8 @@ class RoutinePageState extends State<RoutinePage> {
                           await _dbHelper.InsertRoutines(_newRoutine);
                           print("New rotuine created");
                         }*/
+
+                        routine.increaseAge();
                       }),
                       decoration: InputDecoration(
                           hintText: "Enter routine title",
